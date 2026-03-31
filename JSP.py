@@ -21,7 +21,9 @@ st.set_page_config(
 )
 
 # --- CHARGEMENT DU FOND ---
-bg_img_path = Path("fond.jpeg") 
+import os
+current_dir = os.path.dirname(__file__)
+bg_img_path = os.path.join(current_dir, "fond.jpeg")
 bg_data = load_image_base64(bg_img_path)
 
 if bg_data:
