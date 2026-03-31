@@ -23,12 +23,8 @@ st.set_page_config(
 # --- CHARGEMENT DU FOND ---
 import os
 current_dir = os.path.dirname(__file__)
-bg_img_path = os.path.join(current_dir, "fond.jpeg")
+bg_img_path = os.path.join(current_dir, "Fond.jpeg")
 bg_data = load_image_base64(bg_img_path)
-if bg_data:
-    st.sidebar.success("Image de fond chargée !")
-else:
-    st.sidebar.error("L'image de fond n'a pas été trouvée sur le serveur.")
 
 if bg_data:
     bg_style = f"""
