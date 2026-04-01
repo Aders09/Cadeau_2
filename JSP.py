@@ -25,12 +25,9 @@ st.set_page_config(
 if 'ouvert' not in st.session_state:
     st.session_state.ouvert = False
 
+# On initialise le livre d'or vide
 if 'livre_dor' not in st.session_state:
-    # Quelques messages de départ pour remplir le livre
-    st.session_state.livre_dor = [
-        {"nom": "Adam", "message": "Joyeux Anniversaire Sana ! Que ce livre se remplisse de beaux souvenirs.", "date": "01/04/2024"},
-        {"nom": "Le Site", "message": "Bienvenue dans ton espace précieux ✨", "date": "01/04/2024"}
-    ]
+    st.session_state.livre_dor = []
 
 # --- CHARGEMENT DU FOND ---
 current_dir = os.path.dirname(__file__)
@@ -56,7 +53,6 @@ st.markdown("""
         letter-spacing: 1px;
     }
 
-    /* ONGLETS */
     .stTabs [data-baseweb="tab-list"] {
         gap: 15px;
         background-color: rgba(232, 209, 167, 0.9) !important; 
@@ -70,14 +66,13 @@ st.markdown("""
         font-weight: bold;
     }
 
-    /* BOITE MESSAGE & LIVRE D'OR */
     .message-box {
         padding: 25px;
         border: 1px solid #84592B;
         background-color: rgba(255, 252, 240, 0.98); 
         color: #743014;
         font-family: 'Beau Rivage', cursive !important;
-        font-size: 2rem !important;
+        font-size: 2.2rem !important;
         line-height: 1.2;
         text-align: center;
         margin: 15px 0;
@@ -92,9 +87,9 @@ st.markdown("""
         text-align: right;
         margin-top: -10px;
         font-style: italic;
+        margin-bottom: 20px;
     }
 
-    /* BOUTONS */
     .stButton>button {
         width: 100%;
         background-color: #E8D1A7 !important; 
@@ -104,7 +99,6 @@ st.markdown("""
         border: 1px solid #84592B;           
     }
 
-    /* ANIMATIONS */
     .gift-box { font-size: 100px; animation: wiggle 2s infinite; text-align: center; margin-top: 50px; }
     @keyframes wiggle { 0%, 80% { transform: rotate(0deg); } 85% { transform: rotate(7deg); } 90% { transform: rotate(-7deg); } 95% { transform: rotate(7deg); } 100% { transform: rotate(0deg); } }
     
@@ -128,7 +122,7 @@ def falling_leaves():
 
 if not st.session_state.ouvert:
     st.markdown('<div class="gift-box">🎁</div>', unsafe_allow_html=True)
-    st.markdown("<h2 style='text-align:center;'>Un petit quelque chose pour toi...</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center; color:#743014;'>Un petit quelque chose pour toi...</h2>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         if st.button("Déballer le cadeau !"):
@@ -148,38 +142,17 @@ else:
         st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Une petite réf ?</h3>", unsafe_allow_html=True)
         if st.button('Faire apparaître une réf'):
             falling_leaves()
-            messages = ["On est pas au marché ici !", "C'est la cerise sur le pompon !", "À plus dans l'bus !"]
+            messages = ["On est pas au marché ici !"]
             st.markdown(f'<div class="message-box">"{random.choice(messages)}"</div>', unsafe_allow_html=True)
 
     with tab2:
-        # On définit le dossier où se trouve le script
-        current_dir = os.path.dirname(__file__)
-
         playlist = {
-            "The Smiths - Back to the old house": {
-                "audio": os.path.join(current_dir, "backto.mp3"), 
-                "image": os.path.join(current_dir, "backto.jpeg")
-            },
-            "ABBA - Dancing Queen": {
-                "audio": os.path.join(current_dir, "queen.mp3"), 
-                "image": os.path.join(current_dir, "queen.jpg")
-            },
-            "She & Him - I thought I saw your face today": {
-                "audio": os.path.join(current_dir, "ithought.mp3"), 
-                "image": os.path.join(current_dir, "ithought.jpeg")
-            },
-            "TV Girl - Better in the dark": {
-                "audio": os.path.join(current_dir, "dark.mp3"), 
-                "image": os.path.join(current_dir, "dark.jpeg")
-            },
-            "girl in red - October Passed Me By": {
-                "audio": os.path.join(current_dir, "october.mp3"), 
-                "image": os.path.join(current_dir, "october.png")
-            },
-            "The Police - Every breath you take": {
-                "audio": os.path.join(current_dir, "breath.mp3"), 
-                "image": os.path.join(current_dir, "breath.jpeg")
-            },
+            "The Smiths - Back to the old house": {"audio": os.path.join(current_dir, "backto.mp3"), "image": os.path.join(current_dir, "backto.jpeg")},
+            "ABBA - Dancing Queen": {"audio": os.path.join(current_dir, "queen.mp3"), "image": os.path.join(current_dir, "queen.jpg")},
+            "She & Him - I thought I saw your face today": {"audio": os.path.join(current_dir, "ithought.mp3"), "image": os.path.join(current_dir, "ithought.jpeg")},
+            "TV Girl - Better in the dark": {"audio": os.path.join(current_dir, "dark.mp3"), "image": os.path.join(current_dir, "dark.jpeg")},
+            "girl in red - October Passed Me By": {"audio": os.path.join(current_dir, "october.mp3"), "image": os.path.join(current_dir, "october.png")},
+            "The Police - Every breath you take": {"audio": os.path.join(current_dir, "breath.mp3"), "image": os.path.join(current_dir, "breath.jpeg")},
         }
         if "musique_index" not in st.session_state: st.session_state.musique_index = list(playlist.keys())[0]
         if st.button("🎲 Aléatoire"): st.session_state.musique_index = random.choice(list(playlist.keys()))
@@ -193,10 +166,9 @@ else:
     with tab3:
         st.markdown("### 🖋️ Laisse un petit mot dans le Livre d'Or")
         
-        # Formulaire pour ajouter un message
         with st.container():
-            nom = st.text_input("Ton nom ou surnom :", "")
-            message = st.text_area("Ton message:")
+            nom = st.text_input("Ton nom ou surnom :", "Sana")
+            message = st.text_area("Ton message doux :")
             if st.button("Poster dans le Livre d'Or"):
                 if message:
                     nouveau_mot = {
@@ -204,7 +176,7 @@ else:
                         "message": message,
                         "date": datetime.now().strftime("%d/%m/%Y à %H:%M")
                     }
-                    st.session_state.livre_dor.insert(0, nouveau_mot) # Ajoute au début
+                    st.session_state.livre_dor.insert(0, nouveau_mot)
                     falling_leaves()
                     st.success("Message ajouté ! ✨")
                     time.sleep(1)
@@ -212,14 +184,16 @@ else:
         
         st.divider()
         
-        # Affichage des messages
-        for item in st.session_state.livre_dor:
-            st.markdown(f"""
-                <div class="message-box">
-                    {item['message']}
-                </div>
-                <div class="signature">Par {item['nom']}, le {item['date']}</div>
-            """, unsafe_allow_html=True)
+        if not st.session_state.livre_dor:
+            st.info("Le livre d'or est vide pour le moment. Sois la première à écrire !")
+        else:
+            for item in st.session_state.livre_dor:
+                st.markdown(f"""
+                    <div class="message-box">
+                        {item['message']}
+                    </div>
+                    <div class="signature">Par {item['nom']}, le {item['date']}</div>
+                """, unsafe_allow_html=True)
 
     # PIED DE PAGE
     st.markdown(f"<div style='text-align: center; margin-top: 50px;'><span style='background-color: rgba(232, 209, 167, 0.7); padding: 10px 20px; border-radius: 5px; color: #9D6B53; font-size: 0.85rem; border: 1px solid #84592B;'>Manuscrit avec ❤️ par Adam | {datetime.now().strftime('%d/%m/%Y')}</span></div>", unsafe_allow_html=True)
