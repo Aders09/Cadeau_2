@@ -4,15 +4,34 @@ import time
 from datetime import datetime
 import base64
 import os
+import json
 from pathlib import Path
 
-# --- FONCTION POUR CHARGER L'IMAGE ---
+# --- FONCTIONS UTILITAIRES ---
+
 def load_image_base64(image_path):
     try:
         with open(image_path, "rb") as image_file:
             return base64.b64encode(image_file.read()).decode()
     except:
         return None
+
+def charger_messages_permanents():
+    """Charge les messages depuis le fichier texte s'il existe."""
+    if not os.path.exists("messages.txt"):
+        return []
+    try:
+        with open("messages.txt", "r", encoding="utf-8") as f:
+            return json.load(f)
+    except:
+        return []
+
+def sauvegarder_nouveau_message(nouveau_mot):
+    """Ajoute un message au fichier texte."""
+    messages = charger_messages_permanents()
+    messages.insert(0, nouveau_mot)
+    with open("messages.txt", "w", encoding="utf-8") as f:
+        json.dump(messages, f, ensure_ascii=False, indent=4)
 
 # --- CONFIGURATION DE LA PAGE ---
 st.set_page_config(
@@ -24,10 +43,6 @@ st.set_page_config(
 # --- INITIALISATION DES VARIABLES ---
 if 'ouvert' not in st.session_state:
     st.session_state.ouvert = False
-
-# On initialise le livre d'or vide
-if 'livre_dor' not in st.session_state:
-    st.session_state.livre_dor = []
 
 # --- CHARGEMENT DU FOND ---
 current_dir = os.path.dirname(__file__)
@@ -103,7 +118,7 @@ st.markdown("""
     @keyframes wiggle { 0%, 80% { transform: rotate(0deg); } 85% { transform: rotate(7deg); } 90% { transform: rotate(-7deg); } 95% { transform: rotate(7deg); } 100% { transform: rotate(0deg); } }
     
     @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
-    .leaf { position: fixed; top: -10%; z-index: 9999; animation: fall linear forwards; }
+    .leaf { position: fixed; top: -10%; z-index: 9999; animation: fall linear forwards; pointer-events: none; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -166,28 +181,34 @@ else:
     with tab3:
         st.markdown("### 🖋️ Laisse un petit mot dans le Livre d'Or")
         
-        with st.container():
+        # On utilise un formulaire pour que l'interface soit plus propre
+        with st.form("form_livre", clear_on_submit=True):
             nom = st.text_input("Ton nom ou surnom :", "")
             message = st.text_area("écris ton message :")
-            if st.button("Poster dans le Livre d'Or"):
-                if message:
+            submit = st.form_submit_button("Poster dans le Livre d'Or")
+            
+            if submit:
+                if message.strip():
                     nouveau_mot = {
-                        "nom": nom,
+                        "nom": nom if nom else "Anonyme",
                         "message": message,
                         "date": datetime.now().strftime("%d/%m/%Y à %H:%M")
                     }
-                    st.session_state.livre_dor.insert(0, nouveau_mot)
+                    sauvegarder_nouveau_message(nouveau_mot)
                     falling_leaves()
                     st.success("Message ajouté ! ✨")
                     time.sleep(1)
                     st.rerun()
-        
+
         st.divider()
         
-        if not st.session_state.livre_dor:
+        # On charge les messages depuis le fichier permanent
+        messages_permanents = charger_messages_permanents()
+        
+        if not messages_permanents:
             st.info("Le livre d'or est vide pour le moment. Sois la première à écrire !")
         else:
-            for item in st.session_state.livre_dor:
+            for item in messages_permanents:
                 st.markdown(f"""
                     <div class="message-box">
                         {item['message']}
