@@ -43,7 +43,7 @@ st.markdown("""
 
     /* Titres */
     h1, h2, h3 {
-        color: #743014 !important;
+        color: #E4A65F !important;
         font-family: 'Georgia', serif;
         font-style: italic;
         letter-spacing: 1px;
