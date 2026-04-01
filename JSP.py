@@ -17,6 +17,7 @@ def load_image_base64(image_path):
         return None
 
 def charger_messages_permanents():
+    """Charge les messages depuis le fichier texte s'il existe."""
     if not os.path.exists("messages.txt"):
         return []
     try:
@@ -26,6 +27,7 @@ def charger_messages_permanents():
         return []
 
 def sauvegarder_nouveau_message(nouveau_mot):
+    """Ajoute un message au fichier texte."""
     messages = charger_messages_permanents()
     messages.insert(0, nouveau_mot)
     with open("messages.txt", "w", encoding="utf-8") as f:
@@ -66,7 +68,6 @@ st.markdown("""
         letter-spacing: 1px;
     }
 
-    /* ONGLETS */
     .stTabs [data-baseweb="tab-list"] {
         gap: 15px;
         background-color: rgba(232, 209, 167, 0.9) !important; 
@@ -80,7 +81,6 @@ st.markdown("""
         font-weight: bold;
     }
 
-    /* BOITE DE MESSAGE */
     .message-box {
         padding: 25px;
         border: 1px solid #84592B;
@@ -105,22 +105,18 @@ st.markdown("""
         margin-bottom: 20px;
     }
 
-    /* BOUTONS */
     .stButton>button {
         width: 100%;
         background-color: #E8D1A7 !important; 
         color: #743014 !important;
         border-radius: 12px;
         font-weight: bold;
-        border: 1px solid #84592B; 
-        padding: 0.6rem;          
+        border: 1px solid #84592B;           
     }
 
-    /* CADEAU ANIMATION */
     .gift-box { font-size: 100px; animation: wiggle 2s infinite; text-align: center; margin-top: 50px; }
     @keyframes wiggle { 0%, 80% { transform: rotate(0deg); } 85% { transform: rotate(7deg); } 90% { transform: rotate(-7deg); } 95% { transform: rotate(7deg); } 100% { transform: rotate(0deg); } }
     
-    /* FEUILLES */
     @keyframes fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
     .leaf { position: fixed; top: -10%; z-index: 9999; animation: fall linear forwards; pointer-events: none; }
     </style>
@@ -140,22 +136,16 @@ def falling_leaves():
 # --- LOGIQUE ---
 
 if not st.session_state.ouvert:
-    # ÉCRAN DE DÉPART - CENTRAGE DU CONTENU
     st.markdown('<div class="gift-box">🎁</div>', unsafe_allow_html=True)
     st.markdown("<h2 style='text-align:center; color:#743014;'>Un petit quelque chose pour toi...</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; font-style:italic;'>Appuie ci-dessous pour l'ouvrir</p>", unsafe_allow_html=True)
-    
-    # Création de colonnes pour centrer le bouton (Gauche, Centre, Droite)
-    # Le ratio [1, 2, 1] permet au bouton d'occuper 50% de la largeur au centre
-    col_l, col_c, col_r = st.columns([1, 2, 1])
-    with col_c:
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
         if st.button("Déballer le cadeau !"):
             st.session_state.ouvert = True
             st.balloons()
             time.sleep(0.5)
             st.rerun()
 else:
-    # AFFICHAGE DU SITE UNE FOIS OUVERT
     if bg_data:
         st.markdown(f'<style>.stApp {{ background-image: url("data:image/jpeg;base64,{bg_data}"); background-size: 300px; background-repeat: repeat; background-attachment: fixed; }}</style>', unsafe_allow_html=True)
 
@@ -165,13 +155,10 @@ else:
 
     with tab1:
         st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Une petite réf ?</h3>", unsafe_allow_html=True)
-        # Centrage du bouton de réf également
-        c1, c2, c3 = st.columns([1, 2, 1])
-        with c2:
-            if st.button('Faire apparaître une réf'):
-                falling_leaves()
-                messages = ["On est pas au marché ici !"]
-                st.markdown(f'<div class="message-box">"{random.choice(messages)}"</div>', unsafe_allow_html=True)
+        if st.button('Faire apparaître une réf'):
+            falling_leaves()
+            messages = ["On est pas au marché ici !"]
+            st.markdown(f'<div class="message-box">"{random.choice(messages)}"</div>', unsafe_allow_html=True)
 
     with tab2:
         playlist = {
@@ -183,12 +170,7 @@ else:
             "The Police - Every breath you take": {"audio": os.path.join(current_dir, "breath.mp3"), "image": os.path.join(current_dir, "breath.jpeg")},
         }
         if "musique_index" not in st.session_state: st.session_state.musique_index = list(playlist.keys())[0]
-        
-        c1, c2, c3 = st.columns([1, 2, 1])
-        with c2:
-            if st.button("🎲 Aléatoire"): 
-                st.session_state.musique_index = random.choice(list(playlist.keys()))
-        
+        if st.button("🎲 Aléatoire"): st.session_state.musique_index = random.choice(list(playlist.keys()))
         choix = st.selectbox("Choisis ton morceau :", list(playlist.keys()), index=list(playlist.keys()).index(st.session_state.musique_index))
         col1, col2 = st.columns([1, 2])
         with col1: st.image(playlist[choix]["image"], width=150)
@@ -199,10 +181,10 @@ else:
     with tab3:
         st.markdown("### 🖋️ Laisse un petit mot dans le Livre d'Or")
         
+        # On utilise un formulaire pour que l'interface soit plus propre
         with st.form("form_livre", clear_on_submit=True):
             nom = st.text_input("Ton nom ou surnom :", "")
-            message = st.text_area("Ton message doux :")
-            # Le bouton du formulaire prendra toute la largeur du formulaire
+            message = st.text_area("écris ton message :")
             submit = st.form_submit_button("Poster dans le Livre d'Or")
             
             if submit:
@@ -219,7 +201,10 @@ else:
                     st.rerun()
 
         st.divider()
+        
+        # On charge les messages depuis le fichier permanent
         messages_permanents = charger_messages_permanents()
+        
         if not messages_permanents:
             st.info("Le livre d'or est vide pour le moment. Sois la première à écrire !")
         else:
