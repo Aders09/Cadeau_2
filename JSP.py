@@ -16,8 +16,8 @@ def load_image_base64(image_path):
 
 # --- CONFIGURATION DE LA PAGE ---
 st.set_page_config(
-    page_title="★ Un cadeau pour toi ★",
-    page_icon="🎁",
+    page_title="★ Ton cadeau d'anniversaire ★",
+    page_icon="🍂",
     layout="centered"
 )
 
@@ -27,51 +27,50 @@ if 'ouvert' not in st.session_state:
 
 # --- CHARGEMENT DU FOND ---
 current_dir = os.path.dirname(__file__)
-bg_img_path = os.path.join(current_dir, "Fond.jpeg") 
+bg_img_path = os.path.join(current_dir, "fond.jpeg") 
 bg_data = load_image_base64(bg_img_path)
 
-# --- STYLE CSS ---
+# --- STYLE CSS GLOBAL ---
 st.markdown("""
     <style>
     header, footer, .stDeployButton, #stDecoration {visibility: hidden;}
 
-    /* Style global */
+    /* Style général du texte */
     .stApp {
         color: #9D6B53; 
         font-family: 'Georgia', 'Times New Roman', serif;
     }
 
-    /* Écran de papier cadeau */
-    .wrapping-paper {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background-color: #743014;
-        background-image: radial-gradient(#E8D1A7 2px, transparent 2px);
-        background-size: 30px 30px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 999999;
-        text-align: center;
+    /* Titres */
+    h1, h2, h3 {
+        color: #743014 !important;
+        font-family: 'Georgia', serif;
+        font-style: italic;
+        letter-spacing: 1px;
     }
 
-    .gift-box {
-        font-size: 100px;
-        animation: wiggle 2s infinite;
-        cursor: pointer;
+    /* --- STYLE DES ONGLETS (CORRIGÉ) --- */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 15px;
+        background-color: rgba(232, 209, 167, 0.8) !important; /* Fond beige/marron clair */
+        border: 1px solid #84592B !important;
+        padding: 10px;
+        border-radius: 15px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        color: #743014 !important;
+        font-family: 'Georgia', serif;
+        font-weight: bold;
+        background-color: transparent !important;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        color: #9D6B53 !important;
+    }
+    .stTabs [aria-selected="true"] {
+        border-bottom: 2px solid #743014 !important;
     }
 
-    @keyframes wiggle {
-        0% { transform: rotate(0deg); }
-        80% { transform: rotate(0deg); }
-        85% { transform: rotate(5deg); }
-        90% { transform: rotate(-5deg); }
-        95% { transform: rotate(5deg); }
-        100% { transform: rotate(0deg); }
-    }
-
-    /* Boutons et éléments du site */
+    /* --- BOUTONS --- */
     .stButton>button {
         width: 100%;
         background-color: #E8D1A7 !important; 
@@ -86,8 +85,10 @@ st.markdown("""
     .stButton>button:hover {
         background-color: #9D9167 !important; 
         color: #E8D1A7 !important;
+        transform: translateY(-2px);
     }
 
+    /* Boîte de message */
     .message-box {
         padding: 30px;
         border: 1px solid #84592B;
@@ -98,9 +99,31 @@ st.markdown("""
         text-align: center;
         margin: 20px 0;
         border-radius: 5px;
+        box-shadow: 8px 8px 0px rgba(157, 145, 103, 0.2); 
     }
 
-    /* Feuilles qui tombent */
+    /* Animation du cadeau */
+    .gift-container {
+        text-align: center;
+        margin-top: 100px;
+    }
+    .gift-box {
+        font-size: 100px;
+        animation: wiggle 2s infinite;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+
+    @keyframes wiggle {
+        0% { transform: rotate(0deg); }
+        80% { transform: rotate(0deg); }
+        85% { transform: rotate(7deg); }
+        90% { transform: rotate(-7deg); }
+        95% { transform: rotate(7deg); }
+        100% { transform: rotate(0deg); }
+    }
+
+    /* Animation des feuilles */
     @keyframes fall {
         0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
         100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
@@ -121,23 +144,22 @@ st.markdown("""
 if not st.session_state.ouvert:
     # --- ÉCRAN CADEAU FERMÉ ---
     st.markdown("""
-        <div style="text-align: center; margin-top: 100px;">
+        <div class="gift-container">
             <div class="gift-box">🎁</div>
-            <h2 style="color: #743014;">Tu as reçu un paquet...</h2>
-            <p style="color: #9D6B53; font-style: italic;">Appuie sur le bouton pour l'ouvrir</p>
+            <h2 style="text-align:center;">Tu as reçu un paquet...</h2>
+            <p style="text-align:center; font-style: italic;">Appuie sur le bouton pour l'ouvrir</p>
         </div>
     """, unsafe_allow_html=True)
     
     if st.button("Déballer le cadeau !"):
         st.session_state.ouvert = True
-        st.balloons() # Petite fête au clic
+        st.balloons()
         time.sleep(0.5)
         st.rerun()
 
 else:
     # --- LE SITE UNE FOIS OUVERT ---
     
-    # Application du fond d'écran
     if bg_data:
         st.markdown(f"""
             <style>
