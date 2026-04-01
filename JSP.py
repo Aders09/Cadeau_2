@@ -157,7 +157,8 @@ else:
         st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Une petite réf ?</h3>", unsafe_allow_html=True)
         if st.button('Faire apparaître une réf'):
             falling_leaves()
-            messages = ["On est pas au marché ici !"]
+            messages = ["On est pas au marché ici !",
+                       "Oy boro vaya"]
             st.markdown(f'<div class="message-box">"{random.choice(messages)}"</div>', unsafe_allow_html=True)
 
     with tab2:
