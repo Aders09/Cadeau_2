@@ -16,75 +16,62 @@ def load_image_base64(image_path):
 
 # --- CONFIGURATION DE LA PAGE ---
 st.set_page_config(
-    page_title="★ Ton cadeau d'anniversaire ★",
-    page_icon="🍂",
+    page_title="★ Un cadeau pour toi ★",
+    page_icon="🎁",
     layout="centered"
 )
 
+# --- INITIALISATION DE L'ÉTAT DU CADEAU ---
+if 'ouvert' not in st.session_state:
+    st.session_state.ouvert = False
+
 # --- CHARGEMENT DU FOND ---
 current_dir = os.path.dirname(__file__)
-# Vérifie bien la casse exacte sur GitHub (ex: "Fond.jpeg")
-bg_img_path = os.path.join(current_dir, "Fond.jpeg")
+bg_img_path = os.path.join(current_dir, "fond.jpeg") 
 bg_data = load_image_base64(bg_img_path)
 
-if bg_data:
-    bg_style = f"""
-    <style>
-    /* Correction Pixelisation : On utilise 'repeat' au lieu de 'cover' */
-    /* L'image garde sa taille réelle (donc nette) et se répète */
-    [data-testid="stAppViewContainer"] {{
-        background-image: url("data:image/jpeg;base64,{bg_data}");
-        background-size: auto; /* Taille réelle de l'image, pas de déformation */
-        background-repeat: repeat; /* Se répète pour tout couvrir */
-        background-attachment: fixed; /* Reste fixe au défilement */
-    }}
-    
-    /* Rendre le fond de l'application transparent pour voir le motif */
-    .stApp {{
-        background-color: transparent;
-    }}
-    </style>
-    """
-    st.markdown(bg_style, unsafe_allow_html=True)
-
-# --- STYLE CSS AVEC POLICE "BOOKISH / RETRO" & FIX MOBILE ---
+# --- STYLE CSS ---
 st.markdown("""
     <style>
     header, footer, .stDeployButton, #stDecoration {visibility: hidden;}
 
-    /* FIX MOBILE : Supprimer les marges blanches et coller au bord */
-    .block-container {
-        padding-top: 1rem !important; /* Juste un petit espace en haut */
-        padding-bottom: 0rem !important;
-        padding-left: 0.5rem !important; /* Marges réduites sur les côtés */
-        padding-right: 0.5rem !important;
-        max-width: 100% !important;
-    }
-
-    /* Couleur de base */
+    /* Style global */
     .stApp {
         color: #9D6B53; 
         font-family: 'Georgia', 'Times New Roman', serif;
     }
 
-    /* Titres principaux */
-    h1, h2, h3 {
-        color: #743014 !important;
-        font-family: 'Georgia', serif;
-        font-style: italic;
-        letter-spacing: 1px;
+    /* Écran de papier cadeau */
+    .wrapping-paper {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-color: #743014;
+        background-image: radial-gradient(#E8D1A7 2px, transparent 2px);
+        background-size: 30px 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 999999;
         text-align: center;
-        /* Ajout d'une ombre légère pour décoller du motif de fond */
-        text-shadow: 1px 1px 2px rgba(255,255,255,0.7);
     }
 
-    /* Textes secondaires */
-    p, span, label, li, h4 {
-        color: #9D6B53 !important;
-        font-family: 'Georgia', serif;
+    .gift-box {
+        font-size: 100px;
+        animation: wiggle 2s infinite;
+        cursor: pointer;
     }
 
-    /* --- BOUTONS --- */
+    @keyframes wiggle {
+        0% { transform: rotate(0deg); }
+        80% { transform: rotate(0deg); }
+        85% { transform: rotate(5deg); }
+        90% { transform: rotate(-5deg); }
+        95% { transform: rotate(5deg); }
+        100% { transform: rotate(0deg); }
+    }
+
+    /* Boutons et éléments du site */
     .stButton>button {
         width: 100%;
         background-color: #E8D1A7 !important; 
@@ -99,54 +86,21 @@ st.markdown("""
     .stButton>button:hover {
         background-color: #9D9167 !important; 
         color: #E8D1A7 !important;
-        transform: translateY(-2px);
     }
 
-    /* Images de la playlist */
-    [data-testid="stImage"] img {
-        border: 3px solid #84592B !important;
-        border-radius: 8px !important;
-        background-color: white; /* Fond blanc si l'image a de la transparence */
-    }
-
-    /* Onglets adaptés mobile */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 5px;
-        background-color: rgba(232, 209, 167, 0.85); /* Plus opaque pour la lecture */
-        border: 1px solid #84592B;
-        padding: 5px;
-        border-radius: 15px;
-    }
-    .stTabs [data-baseweb="tab"] {
-        color: #743014 !important;
-        font-family: 'Georgia', serif;
-        font-weight: bold;
-        font-size: 14px !important; /* Taille adaptée mobile */
-        padding: 10px 10px !important;
-    }
-    
-    /* Sélecteur de musique */
-    div[data-baseweb="select"] > div {
-        color: #743014 !important;
-        background-color: rgba(255, 255, 255, 0.9) !important;
-        border-radius: 8px !important;
-    }
-
-    /* Boîte de message style "Papier" */
     .message-box {
-        padding: 25px;
+        padding: 30px;
         border: 1px solid #84592B;
-        background-color: rgba(255, 252, 240, 0.98); /* Fond quasi opaque */
+        background-color: rgba(255, 252, 240, 0.95); 
         color: #743014;
-        font-size: 1.1rem;
+        font-size: 1.2rem;
         font-style: italic;
         text-align: center;
-        margin: 10px 0;
+        margin: 20px 0;
         border-radius: 5px;
-        box-shadow: 6px 6px 0px rgba(157, 145, 103, 0.3); 
     }
 
-    /* Animation des feuilles */
+    /* Feuilles qui tombent */
     @keyframes fall {
         0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
         100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
@@ -162,81 +116,101 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- ANIMATION DES FEUILLES ---
-def falling_leaves():
-    leaf_icons = ["🍂", "🍁", "🍃"]
-    html_leaves = ""
-    for _ in range(15):
-        left = random.randint(0, 95)
-        duration = random.randint(5, 10)
-        delay = random.uniform(0, 5)
-        icon = random.choice(leaf_icons)
-        size = random.randint(20, 40)
-        html_leaves += f'<div class="leaf" style="left:{left}%; font-size:{size}px; animation-duration:{duration}s; animation-delay:{delay}s;">{icon}</div>'
-    st.markdown(html_leaves, unsafe_allow_html=True)
+# --- LOGIQUE D'AFFICHAGE ---
 
-# --- BASE DE DONNÉES PLAYLIST ---
-playlist = {
-    "The Smiths - Back to the old house": {"audio": "backto.mp3", "image": "backto.jpeg"},
-    "ABBA - Dancing Queen": {"audio": "queen.mp3", "image": "queen.jpg"},
-    "She & Him - I thought I saw your face today": {"audio": "ithought.mp3", "image": "ithought.jpeg"},
-    "TV Girl - Better in the dark": {"audio": "dark.mp3", "image": "dark.jpeg"},
-    "girl in red - Better in the dark": {"audio": "october.mp3", "image": "october.png"},
-    "The Police - Every breath you take": {"audio": "breath.mp3", "image": "breath.jpeg"},
-}
-
-# --- CONTENU ---
-
-st.markdown("<h2>★ Ton cadeau d'anniversaire ★</h2>", unsafe_allow_html=True)
-
-tab1, tab2, tab3 = st.tabs(["✨ Les réfs", "🎵 Les sons", "✉️ La lettre"])
-
-with tab1:
-    st.markdown("<h3 style='text-align:center; color:#9D6B53; text-shadow: none;'>Appuie sur le bouton pour faire apparaître une réf...</h3>", unsafe_allow_html=True)
-    if st.button('Les rèfs!!!'):
-        falling_leaves()
-        messages = ["On est pas au marché ici !"]
-        st.markdown(f'<div class="message-box">"{random.choice(messages)}"</div>', unsafe_allow_html=True)
-
-with tab2:
-    st.markdown("### 🎧 Les Sons qui me font penser à toi")
-    
-    if "musique_index" not in st.session_state:
-        st.session_state.musique_index = list(playlist.keys())[0]
-
-    if st.button("🎲 Lecture Aléatoire"):
-        st.session_state.musique_index = random.choice(list(playlist.keys()))
-
-    choix = st.selectbox("Choisis ton morceau :", list(playlist.keys()), index=list(playlist.keys()).index(st.session_state.musique_index))
-    
-    st.divider()
-    
-    col1, col2 = st.columns([1, 2])
-    with col1:
-        st.image(playlist[choix]["image"], width=130)
-    with col2:
-        st.markdown(f"<h4 style='margin-top:0; color:#9D6B53;'>{choix}</h4>", unsafe_allow_html=True)
-        st.audio(playlist[choix]["audio"])
-
-with tab3:
-    st.markdown(f"""
-    <div class="message-box" style="text-align: left; font-style: normal; line-height: 1.6;">
-    Sana,<br><br>
-    Joyeux Anniversaire ! J'ai créé ce site pour toi, pour ton anniversaire, mais tu pourras (j'espère) le garder toute ta vie. J'ai essayé de le créer à ton image. Il se peut que je le modifie dans le futur si je trouve le temps. Bref Bon anniversaire !!!!
-    </div>
+if not st.session_state.ouvert:
+    # --- ÉCRAN CADEAU FERMÉ ---
+    st.markdown("""
+        <div style="text-align: center; margin-top: 100px;">
+            <div class="gift-box">🎁</div>
+            <h2 style="color: #743014;">Tu as reçu un paquet...</h2>
+            <p style="color: #9D6B53; font-style: italic;">Appuie sur le bouton pour l'ouvrir</p>
+        </div>
     """, unsafe_allow_html=True)
+    
+    if st.button("Déballer le cadeau !"):
+        st.session_state.ouvert = True
+        st.balloons() # Petite fête au clic
+        time.sleep(0.5)
+        st.rerun()
 
-# --- PIED DE PAGE ---
-st.markdown(f"""
-    <div style='text-align: center; margin-top: 50px; padding-bottom: 20px; opacity: 0.9;'>
-        <span style='background-color: rgba(232, 209, 167, 0.9); 
-                     padding: 10px 20px; 
-                     border-radius: 20px; 
-                     color: #743014; 
-                     font-size: 0.85rem; 
-                     font-family: serif;
-                     border: 1px solid #84592B;'>
-            Manuscrit avec ❤️ par Adam | {datetime.now().strftime('%d/%m/%Y')}
-        </span>
-    </div>
+else:
+    # --- LE SITE UNE FOIS OUVERT ---
+    
+    # Application du fond d'écran
+    if bg_data:
+        st.markdown(f"""
+            <style>
+            .stApp {{
+                background-image: url("data:image/jpeg;base64,{bg_data}");
+                background-size: 300px; 
+                background-repeat: repeat;
+                background-attachment: fixed;
+            }}
+            </style>
+        """, unsafe_allow_html=True)
+
+    def falling_leaves():
+        leaf_icons = ["🍂", "🍁", "🍃"]
+        html_leaves = ""
+        for _ in range(15):
+            left = random.randint(0, 95)
+            duration = random.randint(5, 10)
+            delay = random.uniform(0, 5)
+            icon = random.choice(leaf_icons)
+            size = random.randint(20, 40)
+            html_leaves += f'<div class="leaf" style="left:{left}%; font-size:{size}px; animation-duration:{duration}s; animation-delay:{delay}s;">{icon}</div>'
+        st.markdown(html_leaves, unsafe_allow_html=True)
+
+    playlist = {
+        "The Smiths - Back to the old house": {"audio": "backto.mp3", "image": "backto.jpeg"},
+        "ABBA - Dancing Queen": {"audio": "queen.mp3", "image": "queen.jpg"},
+        "She & Him - I thought I saw your face today": {"audio": "ithought.mp3", "image": "ithought.jpeg"},
+        "TV Girl - Better in the dark": {"audio": "dark.mp3", "image": "dark.jpeg"},
+        "girl in red - Better in the dark": {"audio": "october.mp3", "image": "october.png"},
+        "The Police - Every breath you take": {"audio": "breath.mp3", "image": "breath.jpeg"},
+    }
+
+    st.markdown("<h2 style='text-align:center; color:#743014; text-shadow: 1px 1px 2px #E8D1A7;'>★ Ton cadeau d'anniversaire ★</h2>", unsafe_allow_html=True)
+
+    tab1, tab2, tab3 = st.tabs(["✨ Les réfs", "🎵 Les sons", "✉️ La lettre"])
+
+    with tab1:
+        st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Appuie sur le bouton pour faire apparaître une réf...</h3>", unsafe_allow_html=True)
+        if st.button('Les rèfs!!!'):
+            falling_leaves()
+            messages = ["On est pas au marché ici !"]
+            st.markdown(f'<div class="message-box">"{random.choice(messages)}"</div>', unsafe_allow_html=True)
+
+    with tab2:
+        st.markdown("### 🎧 Les Sons qui me font penser à toi")
+        if "musique_index" not in st.session_state:
+            st.session_state.musique_index = list(playlist.keys())[0]
+
+        if st.button("🎲 Lecture Aléatoire"):
+            st.session_state.musique_index = random.choice(list(playlist.keys()))
+
+        choix = st.selectbox("Choisis ton morceau :", list(playlist.keys()), index=list(playlist.keys()).index(st.session_state.musique_index))
+        st.divider()
+        col1, col2 = st.columns([1, 2])
+        with col1:
+            st.image(playlist[choix]["image"], width=150)
+        with col2:
+            st.markdown(f"<h4 style='margin-top:0; color:#9D6B53;'>{choix}</h4>", unsafe_allow_html=True)
+            st.audio(playlist[choix]["audio"])
+
+    with tab3:
+        st.markdown(f"""
+        <div class="message-box" style="text-align: left; font-style: normal; line-height: 1.6;">
+        Sana,<br><br>
+        Joyeux Anniversaire ! J'ai créé ce site pour toi, pour ton anniversaire, mais tu pourras (j'espère) le garder toute ta vie. J'ai essayé de le créer à ton image. Il se peut que je le modifie dans le futur si je trouve le temps. Bref Bon anniversaire !!!!
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown(f"""
+        <div style='text-align: center; margin-top: 50px; opacity: 0.8;'>
+            <span style='background-color: rgba(232, 209, 167, 0.7); padding: 10px 20px; border-radius: 5px; color: #9D6B53; font-size: 0.85rem; font-family: serif; border: 1px solid #84592B;'>
+                Manuscrit avec ❤️ par Adam | {datetime.now().strftime('%d/%m/%Y')}
+            </span>
+        </div>
     """, unsafe_allow_html=True)
