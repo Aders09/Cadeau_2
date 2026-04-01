@@ -27,7 +27,7 @@ if 'ouvert' not in st.session_state:
 
 # --- CHARGEMENT DU FOND ---
 current_dir = os.path.dirname(__file__)
-bg_img_path = os.path.join(current_dir, "Fond.jpeg") 
+bg_img_path = os.path.join(current_dir, "Fond1.jpeg") 
 bg_data = load_image_base64(bg_img_path)
 
 # --- STYLE CSS GLOBAL ---
