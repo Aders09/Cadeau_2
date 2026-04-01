@@ -195,8 +195,8 @@ else:
         
         # Formulaire pour ajouter un message
         with st.container():
-            nom = st.text_input("Ton nom ou surnom :", "Sana")
-            message = st.text_area("Ton message doux :")
+            nom = st.text_input("Ton nom ou surnom :", "")
+            message = st.text_area("Ton message:")
             if st.button("Poster dans le Livre d'Or"):
                 if message:
                     nouveau_mot = {
