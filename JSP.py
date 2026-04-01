@@ -152,13 +152,34 @@ else:
             st.markdown(f'<div class="message-box">"{random.choice(messages)}"</div>', unsafe_allow_html=True)
 
     with tab2:
+        # On définit le dossier où se trouve le script
+        current_dir = os.path.dirname(__file__)
+
         playlist = {
-            "The Smiths - Back to the old house": {"audio": "backto.mp3", "image": "backto.jpeg"},
-            "ABBA - Dancing Queen": {"audio": "queen.mp3", "image": "queen.jpg"},
-            "She & Him - I thought I saw your face today": {"audio": "ithought.mp3", "image": "ithought.jpeg"},
-            "TV Girl - Better in the dark": {"audio": "dark.mp3", "image": "dark.jpeg"},
-            "girl in red - October Passed Me By": {"audio": "october.mp3", "image": "october.png"},
-            "The Police - Every breath you take": {"audio": "breath.mp3", "image": "breath.jpeg"},
+            "The Smiths - Back to the old house": {
+                "audio": os.path.join(current_dir, "backto.mp3"), 
+                "image": os.path.join(current_dir, "backto.jpeg")
+            },
+            "ABBA - Dancing Queen": {
+                "audio": os.path.join(current_dir, "queen.mp3"), 
+                "image": os.path.join(current_dir, "queen.jpg")
+            },
+            "She & Him - I thought I saw your face today": {
+                "audio": os.path.join(current_dir, "ithought.mp3"), 
+                "image": os.path.join(current_dir, "ithought.jpeg")
+            },
+            "TV Girl - Better in the dark": {
+                "audio": os.path.join(current_dir, "dark.mp3"), 
+                "image": os.path.join(current_dir, "dark.jpeg")
+            },
+            "girl in red - October Passed Me By": {
+                "audio": os.path.join(current_dir, "october.mp3"), 
+                "image": os.path.join(current_dir, "october.png")
+            },
+            "The Police - Every breath you take": {
+                "audio": os.path.join(current_dir, "breath.mp3"), 
+                "image": os.path.join(current_dir, "breath.jpeg")
+            },
         }
         if "musique_index" not in st.session_state: st.session_state.musique_index = list(playlist.keys())[0]
         if st.button("🎲 Aléatoire"): st.session_state.musique_index = random.choice(list(playlist.keys()))
