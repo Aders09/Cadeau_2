@@ -33,6 +33,9 @@ bg_data = load_image_base64(bg_img_path)
 # --- STYLE CSS GLOBAL ---
 st.markdown("""
     <style>
+    /* IMPORT DES POLICES */
+    @import url('https://fonts.googleapis.com/css2?family=Beau+Rivage&display=swap');
+
     header, footer, .stDeployButton, #stDecoration {visibility: hidden;}
 
     /* Style général du texte */
@@ -49,13 +52,14 @@ st.markdown("""
         letter-spacing: 1px;
     }
 
-    /* --- STYLE DES ONGLETS (CORRIGÉ) --- */
+    /* --- STYLE DES ONGLETS --- */
     .stTabs [data-baseweb="tab-list"] {
         gap: 15px;
-        background-color: rgba(232, 209, 167, 0.8) !important; /* Fond beige/marron clair */
+        background-color: rgba(232, 209, 167, 0.9) !important; 
         border: 1px solid #84592B !important;
         padding: 10px;
         border-radius: 15px;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
     }
     .stTabs [data-baseweb="tab"] {
         color: #743014 !important;
@@ -67,7 +71,7 @@ st.markdown("""
         color: #9D6B53 !important;
     }
     .stTabs [aria-selected="true"] {
-        border-bottom: 2px solid #743014 !important;
+        border-bottom: 3px solid #743014 !important;
     }
 
     /* --- BOUTONS --- */
@@ -88,14 +92,18 @@ st.markdown("""
         transform: translateY(-2px);
     }
 
-    /* Boîte de message */
+    /* Boîte de message & Lettre (Utilise Beau Rivage) */
     .message-box {
-        padding: 30px;
+        padding: 35px;
         border: 1px solid #84592B;
-        background-color: rgba(255, 252, 240, 0.95); 
+        background-color: rgba(255, 252, 240, 0.98); 
         color: #743014;
-        font-size: 1.2rem;
-        font-style: italic;
+        
+        /* Application de Beau Rivage */
+        font-family: 'Beau Rivage', cursive !important;
+        font-size: 2.2rem !important;
+        line-height: 1.2;
+        
         text-align: center;
         margin: 20px 0;
         border-radius: 5px;
@@ -146,16 +154,18 @@ if not st.session_state.ouvert:
     st.markdown("""
         <div class="gift-container">
             <div class="gift-box">🎁</div>
-            <h2 style="text-align:center;">Tu as reçu un paquet...</h2>
+            <h2 style="text-align:center; color:#743014;">Tu as reçu un paquet...</h2>
             <p style="text-align:center; font-style: italic;">Appuie sur le bouton pour l'ouvrir</p>
         </div>
     """, unsafe_allow_html=True)
     
-    if st.button("Déballer le cadeau !"):
-        st.session_state.ouvert = True
-        st.balloons()
-        time.sleep(0.5)
-        st.rerun()
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if st.button("Déballer le cadeau !"):
+            st.session_state.ouvert = True
+            st.balloons()
+            time.sleep(0.5)
+            st.rerun()
 
 else:
     # --- LE SITE UNE FOIS OUVERT ---
@@ -223,7 +233,7 @@ else:
 
     with tab3:
         st.markdown(f"""
-        <div class="message-box" style="text-align: left; font-style: normal; line-height: 1.6;">
+        <div class="message-box" style="text-align: left;">
         Sana,<br><br>
         Joyeux Anniversaire ! J'ai créé ce site pour toi, pour ton anniversaire, mais tu pourras (j'espère) le garder toute ta vie. J'ai essayé de le créer à ton image. Il se peut que je le modifie dans le futur si je trouve le temps. Bref Bon anniversaire !!!!
         </div>
