@@ -154,7 +154,7 @@ if not st.session_state.ouvert:
     st.markdown("""
         <div class="gift-container">
             <div class="gift-box">🎁</div>
-            <h2 style="text-align:center; color:#743014;">Tu as reçu un paquet...</h2>
+            <h2 style="text-align:center; color:#743014;">Voici ton cadeau Sana !</h2>
             <p style="text-align:center; font-style: italic;">Appuie sur le bouton pour l'ouvrir</p>
         </div>
     """, unsafe_allow_html=True)
@@ -203,13 +203,13 @@ else:
         "The Police - Every breath you take": {"audio": "breath.mp3", "image": "breath.jpeg"},
     }
 
-    st.markdown("<h2 style='text-align:center; color:#743014; text-shadow: 1px 1px 2px #E8D1A7;'>★ Ton cadeau d'anniversaire ★</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center; color:#743014; text-shadow: 1px 1px 2px #E8D1A7;'>★ Joyeux anniversaire ★</h2>", unsafe_allow_html=True)
 
     tab1, tab2, tab3 = st.tabs(["✨ Les réfs", "🎵 Les sons", "✉️ La lettre"])
 
     with tab1:
         st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Appuie sur le bouton pour faire apparaître une réf...</h3>", unsafe_allow_html=True)
-        if st.button('Les rèfs!!!'):
+        if st.button('Appuie ici'):
             falling_leaves()
             messages = ["On est pas au marché ici !"]
             st.markdown(f'<div class="message-box">"{random.choice(messages)}"</div>', unsafe_allow_html=True)
