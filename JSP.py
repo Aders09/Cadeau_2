@@ -167,8 +167,8 @@ else:
         st.markdown("### 🖋️ Laisse un petit mot dans le Livre d'Or")
         
         with st.container():
-            nom = st.text_input("Ton nom ou surnom :", "Sana")
-            message = st.text_area("Ton message doux :")
+            nom = st.text_input("Ton nom ou surnom :", "")
+            message = st.text_area("écris ton message :")
             if st.button("Poster dans le Livre d'Or"):
                 if message:
                     nouveau_mot = {
