@@ -154,7 +154,7 @@ else:
     tab1, tab2, tab3 = st.tabs(["✨ Les réfs", "🎵 Les sons", "📜 Livre d'Or"])
 
     with tab1:
-        st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Un rèf qu'on a</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Une rèf qu'on a ensemble !</h3>", unsafe_allow_html=True)
         if st.button('Faire apparaître une réf'):
             falling_leaves()
             messages = ["On est pas au marché ici !",
