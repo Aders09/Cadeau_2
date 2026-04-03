@@ -137,7 +137,7 @@ def falling_leaves():
 if not st.session_state.ouvert:
     # ÉCRAN DE DÉPART (Pas de texte en bas ici)
     st.markdown('<div class="gift-box">🎁</div>', unsafe_allow_html=True)
-    st.markdown("<h2 style='text-align:center; color:#743014;'>Un petit quelque chose pour toi...</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center; color:#743014;'>Ton cadeau d'anniversaire de la part d'Adam...</h2>", unsafe_allow_html=True)
     
     col_l, col_c, col_r = st.columns([1, 2, 1])
     with col_c:
