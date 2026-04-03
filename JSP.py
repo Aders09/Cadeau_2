@@ -17,7 +17,6 @@ def load_image_base64(image_path):
         return None
 
 def charger_messages_permanents():
-    """Charge les messages depuis le fichier texte s'il existe."""
     if not os.path.exists("messages.txt"):
         return []
     try:
@@ -27,7 +26,6 @@ def charger_messages_permanents():
         return []
 
 def sauvegarder_nouveau_message(nouveau_mot):
-    """Ajoute un message au fichier texte."""
     messages = charger_messages_permanents()
     messages.insert(0, nouveau_mot)
     with open("messages.txt", "w", encoding="utf-8") as f:
@@ -111,7 +109,8 @@ st.markdown("""
         color: #743014 !important;
         border-radius: 12px;
         font-weight: bold;
-        border: 1px solid #84592B;           
+        border: 1px solid #84592B; 
+        padding: 0.6rem;          
     }
 
     .gift-box { font-size: 100px; animation: wiggle 2s infinite; text-align: center; margin-top: 50px; }
@@ -136,16 +135,19 @@ def falling_leaves():
 # --- LOGIQUE ---
 
 if not st.session_state.ouvert:
+    # ÉCRAN DE DÉPART (Pas de texte en bas ici)
     st.markdown('<div class="gift-box">🎁</div>', unsafe_allow_html=True)
-    st.markdown("<h2 style='text-align:center; color:#743014;'>Ton cadeau !</h2>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if st.button("Appuie sur le bouton pour voir le site!"):
+    st.markdown("<h2 style='text-align:center; color:#743014;'>Un petit quelque chose pour toi...</h2>", unsafe_allow_html=True)
+    
+    col_l, col_c, col_r = st.columns([1, 2, 1])
+    with col_c:
+        if st.button("Déballer le cadeau !"):
             st.session_state.ouvert = True
             st.balloons()
             time.sleep(0.5)
             st.rerun()
 else:
+    # AFFICHAGE DU SITE (Le texte en bas apparaîtra ici)
     if bg_data:
         st.markdown(f'<style>.stApp {{ background-image: url("data:image/jpeg;base64,{bg_data}"); background-size: 300px; background-repeat: repeat; background-attachment: fixed; }}</style>', unsafe_allow_html=True)
 
@@ -153,26 +155,33 @@ else:
 
     tab1, tab2, tab3 = st.tabs(["✨ Les réfs", "🎵 Les sons", "📜 Livre d'Or"])
 
+    # --- TAB 1 : RÉFS ---
     with tab1:
-        st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Une rèf qu'on a ensemble !</h3>", unsafe_allow_html=True)
-        if st.button('Faire apparaître une réf'):
-            falling_leaves()
-            messages = ["On est pas au marché ici !",
-                       "Oy boro vaya"]
-            st.markdown(f'<div class="message-box">"{random.choice(messages)}"</div>', unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Une petite réf ?</h3>", unsafe_allow_html=True)
+        c1, c2, c3 = st.columns([1, 2, 1])
+        with c2:
+            if st.button('Faire apparaître une réf'):
+                falling_leaves()
+                messages = ["On est pas au marché ici !"]
+                st.markdown(f'<div class="message-box">"{random.choice(messages)}"</div>', unsafe_allow_html=True)
 
+    # --- TAB 2 : MUSIQUE ---
     with tab2:
         playlist = {
             "The Smiths - Back to the old house": {"audio": os.path.join(current_dir, "backto.mp3"), "image": os.path.join(current_dir, "backto.jpeg")},
             "ABBA - Dancing Queen": {"audio": os.path.join(current_dir, "queen.mp3"), "image": os.path.join(current_dir, "queen.jpg")},
             "She & Him - I thought I saw your face today": {"audio": os.path.join(current_dir, "ithought.mp3"), "image": os.path.join(current_dir, "ithought.jpeg")},
             "TV Girl - Better in the dark": {"audio": os.path.join(current_dir, "dark.mp3"), "image": os.path.join(current_dir, "dark.jpeg")},
-            "girl in red - we fell in love in october": {"audio": os.path.join(current_dir, "october.mp3"), "image": os.path.join(current_dir, "october.png")},
+            "girl in red - October Passed Me By": {"audio": os.path.join(current_dir, "october.mp3"), "image": os.path.join(current_dir, "october.png")},
             "The Police - Every breath you take": {"audio": os.path.join(current_dir, "breath.mp3"), "image": os.path.join(current_dir, "breath.jpeg")},
         }
-        st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Les sons qui me font penser à toi</h3>", unsafe_allow_html=True)
         if "musique_index" not in st.session_state: st.session_state.musique_index = list(playlist.keys())[0]
-        if st.button("🎲 Aléatoire"): st.session_state.musique_index = random.choice(list(playlist.keys()))
+        
+        c1, c2, c3 = st.columns([1, 2, 1])
+        with c2:
+            if st.button("🎲 Aléatoire"): 
+                st.session_state.musique_index = random.choice(list(playlist.keys()))
+        
         choix = st.selectbox("Choisis ton morceau :", list(playlist.keys()), index=list(playlist.keys()).index(st.session_state.musique_index))
         col1, col2 = st.columns([1, 2])
         with col1: st.image(playlist[choix]["image"], width=150)
@@ -180,13 +189,12 @@ else:
             st.markdown(f"<h4 style='color:#9D6B53;'>{choix}</h4>", unsafe_allow_html=True)
             st.audio(playlist[choix]["audio"])
 
+    # --- TAB 3 : LIVRE D'OR ---
     with tab3:
         st.markdown("### 🖋️ Laisse un petit mot dans le Livre d'Or")
-        
-        # On utilise un formulaire pour que l'interface soit plus propre
         with st.form("form_livre", clear_on_submit=True):
             nom = st.text_input("Ton nom ou surnom :", "")
-            message = st.text_area("écris ton message :")
+            message = st.text_area("Ton message doux :")
             submit = st.form_submit_button("Poster dans le Livre d'Or")
             
             if submit:
@@ -203,10 +211,7 @@ else:
                     st.rerun()
 
         st.divider()
-        
-        # On charge les messages depuis le fichier permanent
         messages_permanents = charger_messages_permanents()
-        
         if not messages_permanents:
             st.info("Le livre d'or est vide pour le moment. Sois la première à écrire !")
         else:
@@ -218,4 +223,11 @@ else:
                     <div class="signature">Par {item['nom']}, le {item['date']}</div>
                 """, unsafe_allow_html=True)
 
-    # PIED DE PAGE
+    # --- PIED DE PAGE (Affiché uniquement ici) ---
+    st.markdown(f"""
+        <div style='text-align: center; margin-top: 50px;'>
+            <span style='background-color: rgba(232, 209, 167, 0.7); padding: 10px 20px; border-radius: 5px; color: #9D6B53; font-size: 0.85rem; border: 1px solid #84592B;'>
+                Fait par Adam (le plus beau et le plus intelligent) | {datetime.now().strftime('%d/%m/%Y')}
+            </span>
+        </div>
+    """, unsafe_allow_html=True)
