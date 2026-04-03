@@ -194,7 +194,7 @@ else:
     with tab3:
         st.markdown("### 🖋️ Laisse un petit mot dans le Livre d'Or")
         with st.form("form_livre", clear_on_submit=True):
-            nom = st.text_input("Ton nom ou surnom :", "")
+            nom = st.text_input("Ton prénom:", "")
             message = st.text_area("Ton message:")
             submit = st.form_submit_button("Poster dans le Livre d'Or")
             
