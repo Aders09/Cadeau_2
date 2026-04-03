@@ -219,12 +219,3 @@ else:
                 """, unsafe_allow_html=True)
 
     # PIED DE PAGE
-st.markdown(f"""
-    <div style='text-align: center; margin-top: 50px;'>
-        <span style='background-color: rgba(232, 209, 167, 0.7); padding: 10px 20px; border-radius: 5px; color: #9D6B53; font-size: 0.85rem; border: 1px solid #84592B;'>
-            Fait par Adam (le plus beau, le plus incroyable et le plus intelligent) | {datetime.now().strftime('%d/%m/%Y')}
-        </span>
-    </div>
-""", unsafe_allow_html=True)
-
-
