@@ -157,12 +157,16 @@ else:
 
     # --- TAB 1 : RÉFS ---
     with tab1:
-        st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Une rèf qu'on a entre nous:</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align:center; color:#9D6B53;'>des rèf que t'as avec tes amis:</h3>", unsafe_allow_html=True)
         c1, c2, c3 = st.columns([1, 2, 1])
         with c2:
             if st.button('Faire apparaître une réf'):
                 falling_leaves()
-                messages = ["On est pas au marché ici !"]
+                messages = ["On est pas au marché ici !",
+                           "Oy boro va",
+                           "Ma convoc s'est envolé",
+                           "Quand t'allume le téléphone ya écrit faux iphone",
+                           ]
                 st.markdown(f'<div class="message-box">"{random.choice(messages)}"</div>', unsafe_allow_html=True)
 
     # --- TAB 2 : MUSIQUE ---
