@@ -157,7 +157,7 @@ else:
 
     # --- TAB 1 : RÉFS ---
     with tab1:
-        st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Une petite réf ?</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Une rèf qu'on a entre nous:</h3>", unsafe_allow_html=True)
         c1, c2, c3 = st.columns([1, 2, 1])
         with c2:
             if st.button('Faire apparaître une réf'):
@@ -177,6 +177,7 @@ else:
         }
         if "musique_index" not in st.session_state: st.session_state.musique_index = list(playlist.keys())[0]
         
+        st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Des sons qui me font penser à toi</h3>", unsafe_allow_html=True)
         c1, c2, c3 = st.columns([1, 2, 1])
         with c2:
             if st.button("🎲 Aléatoire"): 
