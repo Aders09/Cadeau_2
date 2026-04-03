@@ -170,6 +170,7 @@ else:
             "girl in red - we fell in love in october": {"audio": os.path.join(current_dir, "october.mp3"), "image": os.path.join(current_dir, "october.png")},
             "The Police - Every breath you take": {"audio": os.path.join(current_dir, "breath.mp3"), "image": os.path.join(current_dir, "breath.jpeg")},
         }
+        st.markdown("<h3 style='text-align:center; color:#9D6B53;'>Les sons qui me font penser à toi</h3>", unsafe_allow_html=True)
         if "musique_index" not in st.session_state: st.session_state.musique_index = list(playlist.keys())[0]
         if st.button("🎲 Aléatoire"): st.session_state.musique_index = random.choice(list(playlist.keys()))
         choix = st.selectbox("Choisis ton morceau :", list(playlist.keys()), index=list(playlist.keys()).index(st.session_state.musique_index))
