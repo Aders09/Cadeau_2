@@ -176,7 +176,7 @@ else:
             "ABBA - Dancing Queen": {"audio": os.path.join(current_dir, "queen.mp3"), "image": os.path.join(current_dir, "queen.jpg")},
             "She & Him - I thought I saw your face today": {"audio": os.path.join(current_dir, "ithought.mp3"), "image": os.path.join(current_dir, "ithought.jpeg")},
             "TV Girl - Better in the dark": {"audio": os.path.join(current_dir, "dark.mp3"), "image": os.path.join(current_dir, "dark.jpeg")},
-            "girl in red - October Passed Me By": {"audio": os.path.join(current_dir, "october.mp3"), "image": os.path.join(current_dir, "october.png")},
+            "girl in red - We fell in love in october": {"audio": os.path.join(current_dir, "october.mp3"), "image": os.path.join(current_dir, "october.png")},
             "The Police - Every breath you take": {"audio": os.path.join(current_dir, "breath.mp3"), "image": os.path.join(current_dir, "breath.jpeg")},
         }
         if "musique_index" not in st.session_state: st.session_state.musique_index = list(playlist.keys())[0]
